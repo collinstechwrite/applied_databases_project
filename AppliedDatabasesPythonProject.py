@@ -2,8 +2,7 @@ import pymysql
 pymysql.install_as_MySQLdb()
 import MySQLdb
 
-
-
+import pymongo
 from pymongo import MongoClient
 #include pprint for readabillity of the 
 from pprint import pprint
@@ -105,19 +104,7 @@ def View_People():
             if keyboard.is_pressed('q'):  # if key 'q' is pressed
                 print('You Pressed q Key!')
                 break
-
-
-
         count +=1
-
-
-
-
-
-
-
-
-
 
     db.close()
 
@@ -216,38 +203,68 @@ def View_Countries_By_Name():
     print("Choice 4")
     print("Countries_By_Name")
     print("------------------------------")
+
+
+
+    if len(Countries_By_Name_Dictionary) == 0:
+        print("Loading Country Name data from the World database to Python Program dictionary")
+ 
+        db = MySQLdb.connect(host="localhost",    # your host, usually localhost
+        user="root",         # your username
+        passwd="root",  # your password
+        db="world")        # name of the data base
+
+        # you must create a Cursor object. It will let
+        #  you execute all the queries you need
+        cur = db.cursor()
+
+        # Use all the SQL you like
+        cur.execute("SELECT Name, Continent, Population, HeadOfState FROM country")
+
+
+
+
+        # print all the first cell of all the rows
+        for row in cur.fetchall():
+            
+
+            dictvalue = []
+            dictkey = row[0] #Make country Name dictionary key
+            dictdata1 = row[1] #Continent
+            dictdata2 = row[2] #Population
+            dictdata3 = row[3] #HeadOfState 
+            dictvalue.insert(0,dictdata1) #add Continent to list
+            dictvalue.insert(1,dictdata2) #add Populaton to list
+            dictvalue.insert(2,dictdata3) #add HeadOfState to list
+            Countries_By_Name_Dictionary[dictkey]=dictvalue #add key and list to dictionary
+
+        db.close()
+
     country_name = input("Enter Country Name:")
 
-    db = MySQLdb.connect(host="localhost",    # your host, usually localhost
-    user="root",         # your username
-    passwd="root",  # your password
-    db="world")        # name of the data base
+    #Code used to retrieve data from Countries_By_Name_Dictionary
 
-    # you must create a Cursor object. It will let
-    #  you execute all the queries you need
-    cur = db.cursor()
-
-    # Use all the SQL you like
-    cur.execute("SELECT * FROM country WHERE Name LIKE '%" + country_name + "%'")
-
-    # print all the first cell of all the rows
-    for row in cur.fetchall():
-        print(row[0],row[1],row[2])
-
-        dictvalue  = []
-        dictkey = row[0]
-        dictdata1 = row[1]
-        dictdata2 = row[2]
-
-        dictvalue.append(dictdata1)
-        dictvalue.append(dictdata2)
-  
-        Countries_By_Name_Dictionary.update({dictkey : dictvalue})
-    print("Countries_By_Name_Dictionary")
-    print(Countries_By_Name_Dictionary)
+    dictionary_result_count = 0
 
 
-    db.close()
+    print('{:*<40} {:*<20} {:*<20} {:*<40}'.format("COUNTRY", "CONTINENT", "POPULATION","HEAD OF STATE"))
+
+    
+    for k,v in Countries_By_Name_Dictionary.items():
+        str(k)
+
+
+        """https://stackoverflow.com/questions/319426/how-do-i-do-a-case-insensitive-string-comparison"""
+        if country_name.lower() in k.lower(): #ignore case in string comparison so that ir would return Ireland and United Arab Emirates
+            dictionary_result_count += 1
+            print('{:_<40} {:_<20} {:_>20} {:_>40}'.format(k,v[0],v[1],v[2]))
+        
+
+
+
+
+    print(dictionary_result_count, " results")
+
 
 
 def View_Countries_By_Population():
@@ -274,15 +291,16 @@ def View_Countries_By_Population():
         # print all the first cell of all the rows
         for row in cur.fetchall():
 
-
+            dictvalue = []
             dictkey = row[2] #Make population dictionary key
             dictdata1 = row[0]
             dictdata2 = row[1]
+            dictvalue.insert(0,dictdata1)
+            dictvalue.insert(1,dictdata2)
+            Countries_By_Population_Dictionary[dictkey]=dictvalue
 
-            """myDict.update( {‘myList’: []} )"""
             
-            dictvalue = "[" + dictdata1 + "," + dictdata2 + "]"
-            Countries_By_Population_Dictionary.update({dictkey : dictvalue})
+
         db.close()
         
 
@@ -306,27 +324,32 @@ def View_Countries_By_Population():
     #Code used to retrieve data from Countries_By_Population_Dictionary
 
     dictionary_result_count = 0
-    
+
+
+    print('{:*<40} {:*<20} {:*<20}'.format("COUNTRY", "CONTINENT", "POPULATION"))
     if denominator == "<":
         for k,v in Countries_By_Population_Dictionary.items():
             if k < int(country_population):
-                print(v[0], v[1], k)
+                print('{:_<40} {:_<20} {:_>20}'.format(v[0], v[1], k))
                 dictionary_result_count += 1
 
     if denominator == ">":
         for k,v in Countries_By_Population_Dictionary.items():
             if k > int(country_population):
-                print(v[0], v[1], k)
+                print('{:_<40} {:_<20} {:_>20}'.format(v[0], v[1], k))
                 dictionary_result_count += 1
 
     if denominator == "=":
         for k,v in Countries_By_Population_Dictionary.items():
             if k == int(country_population):
-                print(v[0], v[1], k)
+                print('{:_<40} {:_<20} {:_>20}'.format(v[0], v[1], k))
                 dictionary_result_count += 1
 
 
-    print("Dictionary Result Count: " , dictionary_result_count)
+
+
+
+    print(dictionary_result_count, " results")
 
 
 
@@ -338,31 +361,69 @@ def Find_Students_By_Address():
     collection  = db.docs
     # Make a query to list all the documents
 
-    for doc in collection.find({"details.address":"" + addressquery + ""}): #just find the records where age 21
+    for doc in collection.find({"details.address":"" + addressquery + ""}): #find records by address
 
         #Print each document
 
         print(doc)
 
+    """ ORIGINAL DRS
+    addressquery = input("Input Address:")
+    print("RESULTS BY ADDRESS")
+    collection  = db.docs
+    # Make a query to list all the documents
+
+    for doc in collection.find({"details.address":"" + addressquery + ""}): #find records by address
+
+        #Print each document
+
+        print(doc)
+    """
+
+        
+
 def Add_New_Course():
+
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    mydb = myclient["proj20DB"]
+    mycol = mydb["docs"]
+
+
+    """https://kb.objectrocket.com/mongo-db/how-to-access-and-parse-mongodb-documents-in-python-364"""
+
+    ids = [] # create an empty list for IDs
+    # iterate pymongo documents with a for loop
+    for doc in mycol.find():
+        # append each document's ID to the list
+        ids += [doc["_id"]]
+
+    print("Choice 7")
     print("Add New Course")
-    db = MySQLdb.connect(host="localhost",    # your host, usually localhost
-    user="root",         # your username
-    passwd="root",  # your password
-    db="world")        # name of the data base
+    print("--------------")
+    
+    _id = input("_id :")
 
-    # you must create a Cursor object. It will let
-    #  you execute all the queries you need
-    cur = db.cursor()
 
-    # Use all the SQL you like
-    cur.execute("SELECT * FROM person")
+    while _id in ids:
+        print("*** ERROR ***: _id " + _id + " already exists")
+        _id = input("_id :")
+ 
+    name = input("Name :")
+    level = int(input("Level :"))
 
-    # print all the first cell of all the rows
-    for row in cur.fetchall():
-        print(row[0],row[1],row[2])
+    """https://www.w3schools.com/python/python_mongodb_insert.asp"""
 
-    db.close()
+    mylist = [
+      { "_id" : _id, "name" : name, "level" : level},
+
+    ]
+
+    x = mycol.insert_many(mylist)
+
+    #print list of the _id values of the inserted documents:
+
+    print("Added " , x.inserted_ids , " to courses")
+
 
 
 def display_menu():
