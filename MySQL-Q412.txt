@@ -1,0 +1,4 @@
+SELECT name, lifeexpectancy FROM country
+WHERE Continent = 'Europe' AND
+lifeexpectancy < (SELECT AVG(lifeexpectancy) FROM country)
+ORDER BY NAME ASC;

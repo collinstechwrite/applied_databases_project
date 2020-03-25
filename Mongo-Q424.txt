@@ -1,0 +1,10 @@
+db.docs.aggregate([
+  /** $match is used to filter docs kind of .find(), lessen the dataset size for further stages */
+  {
+    $match: {details:{$exists:true}}
+  },
+  /** $project works as projection - w.r.t. this projection it will lessen the each document size for further stages */
+{ $project: {_id: 0, "details.name": 1, qualifications: {$ifNull: ['$qualifications', 'None'] }}},
+  /** $sort should work as .sort() */
+  { $sort: {"details.name": 1 } }
+]);

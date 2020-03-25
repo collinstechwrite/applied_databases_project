@@ -1,0 +1,14 @@
+db.docs.aggregate(
+  [
+    {
+      $match: {
+        qualifications: {
+          $exists:true
+        }
+      }
+    },
+    {
+      $count: "Qualified Students"
+    }
+  ]
+);

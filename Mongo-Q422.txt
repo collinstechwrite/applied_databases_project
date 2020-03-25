@@ -1,0 +1,18 @@
+db.docs.aggregate([
+  {
+    $match: {
+      $and: [{ name: { $exists: true } }, { level: { $exists: true } }]
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      name: 1,
+      Honours: {
+        
+$cond: { if: { $gte: ["$level", 8] }, then: {$toBool: 1}, else: {$toBool: 0}}
+  }
+    }
+  },
+  { $sort: { name: 1 } }
+]);

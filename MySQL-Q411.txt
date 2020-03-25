@@ -1,0 +1,7 @@
+SELECT T3.name, T2.dateArrived, T4.name
+FROM person T1
+INNER JOIN hasvisitedcity T2 ON T2.personID = T1.personID
+INNER JOIN city T3 ON T2.cityID = T3.ID
+INNER JOIN country T4 ON T3.CountryCode = T4.code
+WHERE T1.personname = 'Alan'
+ORDER BY T3.name ASC;
