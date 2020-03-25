@@ -1,4 +1,4 @@
-SELECT DISTINCT Table1.Name, Table3.Name, Table2.Language, Table2.Percentage 
+SELECT DISTINCT Table1.Name as name, Table3.Name as name, Table2.Language as language, Table2.Percentage as percentage
 FROM city Table1
 LEFT JOIN countrylanguage Table2 ON Table1.CountryCode = Table2.CountryCode
 INNER JOIN country Table3 ON Table1.ID = Table3.Capital

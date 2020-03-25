@@ -1,9 +1,24 @@
+"""
+Author Christopher Collins
+This Python Program For Applied Databases Project
+I was able to complete this task by re purposing the menu code provided in the python lecture
+pointing each item in the menu to a function
+researching how to do the function online, including sources such as stackoverflow and other urls
+reference in comments.
+I had the most difficulty itterating through 2 records at a time, there were different resources
+available that handle key events, but I finally settled with keyboard and os for pausing
+these do not run the same if run in idle but do work in command prompt
+"""
+
+
 import pymysql
 pymysql.install_as_MySQLdb()
 import MySQLdb
 
+#different method were found online for working with pymongo imports
 import pymongo
 from pymongo import MongoClient
+
 #include pprint for readabillity of the 
 from pprint import pprint
 #change the MongoClient connection string to your MongoDB database instance
@@ -24,17 +39,6 @@ If the user chooses 4 or 5 again, the information is not read from the database 
 Instead, the information read the first time option 4 or 5 was chosen is used"""
 
 
-"""
-if 'c' not in Countries_By_Name_Dictionary.keys():
-    Countries_By_Name_Dictionary['c'] = 300
-    # Adding a new key value pair
-    Countries_By_Name_Dictionary.update( {'before' : 23} )
-""" 
-
-
-
-
-
 #to store countries by name
 Countries_By_Name_Dictionary = {}
 
@@ -43,7 +47,7 @@ Countries_By_Population_Dictionary = {}
 
 
 
-# Main function
+# Main function , code was repurposed from lecture menu
 def main():
     # Initialise array
     array = []
@@ -131,8 +135,7 @@ def View_Countries_By_Independence_Year():
     for row in cur.fetchall():
         print(row[0],row[1],row[2])
 
-    os.system("""bash -c 'read -s -n 1 -p "Press any key to continue..."'""")
-    print("\n")
+
 
 
 
@@ -354,7 +357,6 @@ def View_Countries_By_Population():
 
 
 
-
 def Find_Students_By_Address():
     addressquery = input("Input Address:")
     print("RESULTS BY ADDRESS")
@@ -367,18 +369,7 @@ def Find_Students_By_Address():
 
         print(doc)
 
-    """ ORIGINAL DRS
-    addressquery = input("Input Address:")
-    print("RESULTS BY ADDRESS")
-    collection  = db.docs
-    # Make a query to list all the documents
 
-    for doc in collection.find({"details.address":"" + addressquery + ""}): #find records by address
-
-        #Print each document
-
-        print(doc)
-    """
 
         
 

@@ -1,4 +1,4 @@
-SELECT personID, personname, age, IF(age >= 40, "Other", IF(age BETWEEN 30 AND 39, "Thirty something", IF(age BETWEEN 19 AND 29, "Late teens/Twenties", "Child")
+SELECT personID, personname, age, IF(age >= 40, "Other", IF(age BETWEEN 30 AND 39, "Thirtysomething", IF(age BETWEEN 19 AND 29, "Late teens/Twenties", "Child")
 )
 ) AS Stage
 FROM person;

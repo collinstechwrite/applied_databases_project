@@ -1,4 +1,4 @@
-Select table2.personname, table3.Name, IF(DATEDIFF(table1.dateLeft, table1.dateArrived)  >99, "Very Long", (IF(DATEDIFF(table1.dateLeft, table1.dateArrived) > 20, "Long", "Short"))) AS Stay_Length
+Select table2.personname, table3.Name AS name, IF(DATEDIFF(table1.dateLeft, table1.dateArrived)  >99, "Very Long", (IF(DATEDIFF(table1.dateLeft, table1.dateArrived) > 20, "Long", "Short"))) AS "Stay Length"
 FROM hasvisitedcity table1
 Inner join person table2 ON table1.personID = table2.personID
 Inner join city table3 ON table1.cityID = table3.ID
